@@ -271,6 +271,12 @@ register_hook(qw/before_cart_add_validate
                  before_cart_clear after_cart_clear
                  before_cart_set_users_id after_cart_set_users_id
                  before_cart_set_sessions_id after_cart_set_sessions_id
+                 before_update_sku
+                 before_update_canonical_sku
+                 before_update_name
+                 after_update_sku
+                 after_update_canonical_sku
+                 after_update_name
                 /);
 
 register shop_schema => sub {

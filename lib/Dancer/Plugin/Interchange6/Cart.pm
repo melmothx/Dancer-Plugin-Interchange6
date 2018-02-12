@@ -533,6 +533,41 @@ around update => sub {
     }
 };
 
+around 'update_sku' => sub {
+    _handle_item_update(sku => @_)
+};
+
+around 'update_canonical_sku' => sub {
+    _handle_item_update(canonical_sku => @_)
+};
+
+around 'update_name' => sub {
+    _handle_item_update(name => @_)
+};
+
+
+sub _handle_item_update {
+    my ($name, $orig, $self, @args ) = @_;
+
+  ARGS: while ( @args > 0 ) {
+
+        my $sku = shift @args;
+        my $attr = shift @args;
+        my $before_hook = 'before_update_' . $name;
+        my $after_hook = 'after_update_' . $name;
+
+        execute_hook( $before_hook, $self, $sku, $attr );
+
+        my ($ret) = $orig->( $self, $sku => $attr );
+
+        # canonical_sku and name are not saved in the db
+        $self->_find_and_update( $sku, { $name => $attr } ) if $name eq 'sku';
+
+        execute_hook( $after_hook, $ret, $sku, $attr );
+    }
+};
+
+
 =head1 HOOKS
 
 The following hooks are available:

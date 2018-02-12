@@ -434,6 +434,11 @@ test 'main cart tests' => sub {
 
     cmp_ok $cart->dbic_cart->sessions_id, 'eq', 'sessionID',
       "session ID updated in DB cart";
+
+    lives_ok { $cart->add({ sku => 'os28085-6', quantity => 5 }) };
+    lives_ok { $cart->update_sku('os28085-6', 'os28006') };
+    lives_ok { $cart->update_name('os28006', 'a test') };
+    lives_ok { $cart->update_canonical_sku('os28006', 'os28085') };
 };
 
 1;
